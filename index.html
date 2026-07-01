@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HomeCare: Plataforma de Gestão de Cuidado Domiciliar</title>
+<meta name="description" content="HomeCare: plataforma que conecta a empresa de cuidados, os enfermeiros em campo e as famílias dos pacientes. Estudo de caso e apresentação do produto." />
+<style>
+  :root{
+    --purple:#6C63FF; --purple-d:#5148e0;
+    --admin:#FF6B35; --family:#00BCD4;
+    --ink:#0F172A; --ink-2:#334155; --muted:#64748B;
+    --bg:#F6F7FB; --surface:#FFFFFF; --line:#E7EAF0;
+    --green:#16A34A; --red:#EF4444;
+    --shadow:0 10px 40px -12px rgba(15,23,42,.18);
+    --shadow-sm:0 4px 18px -8px rgba(15,23,42,.20);
+    --radius:22px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:76px}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  section{padding:96px 0}
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple)}
+  h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:14px 0 16px}
+  .lead{font-size:clamp(16px,2vw,19px);color:var(--ink-2);max-width:640px}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(246,247,251,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}
+  .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--purple),var(--admin));display:grid;place-items:center;color:#fff;font-size:17px;box-shadow:var(--shadow-sm)}
+  .navlinks{display:flex;gap:28px;font-size:14.5px;font-weight:600;color:var(--ink-2)}
+  .navlinks a:hover{color:var(--purple)}
+  @media(max-width:760px){.navlinks{display:none}}
+
+  /* HERO */
+  .hero{position:relative;overflow:hidden;padding:72px 0 40px}
+  .hero::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(680px 420px at 80% -10%,rgba(108,99,255,.18),transparent 60%),
+    radial-gradient(560px 420px at 8% 20%,rgba(255,107,53,.12),transparent 60%);pointer-events:none}
+  .hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+  .hero h1{font-size:clamp(34px,5.4vw,58px);font-weight:850;letter-spacing:-.03em;line-height:1.03}
+  .hero h1 .grad{background:linear-gradient(120deg,var(--purple),var(--admin));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.sub{margin-top:20px;font-size:19px;color:var(--ink-2);max-width:520px}
+  .cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:999px;font-weight:700;font-size:15px;transition:transform .15s ease,box-shadow .15s ease}
+  .btn-primary{background:var(--purple);color:#fff;box-shadow:0 12px 30px -10px rgba(108,99,255,.6)}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+  .btn-ghost:hover{transform:translateY(-2px)}
+  .kpis{display:flex;gap:30px;margin-top:38px;flex-wrap:wrap}
+  .kpi b{display:block;font-size:28px;font-weight:850;letter-spacing:-.02em}
+  .kpi span{font-size:13px;color:var(--muted);font-weight:600}
+  .hero-stage{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:18px;min-height:520px}
+  .hero-stage .phone.back{transform:translateY(26px) scale(.86) rotate(-4deg);opacity:.92;z-index:1}
+  .hero-stage .phone.front{z-index:2;transform:rotate(2deg)}
+  @media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.hero-stage{min-height:0;margin-top:20px}}
+
+  /* PHONE MOCKUP */
+  .phone{position:relative;width:236px;flex:0 0 auto;border-radius:40px;background:#0B1020;padding:9px;box-shadow:var(--shadow);border:1px solid #23283b}
+  .phone.sm{width:206px;border-radius:34px;padding:8px}
+  .phone media,.phone img,.phone video{width:100%;display:block;border-radius:32px;background:#fff}
+  .phone.sm img,.phone.sm video{border-radius:27px}
+
+  /* PROBLEM/SOLUTION */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  @media(max-width:820px){.split{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow-sm)}
+  .card h3{font-size:19px;margin-bottom:10px;letter-spacing:-.01em}
+  .card.problem h3{color:var(--red)} .card.solution h3{color:var(--green)}
+  .card ul{list-style:none;display:grid;gap:12px;margin-top:6px}
+  .card li{display:flex;gap:11px;color:var(--ink-2);font-size:15.5px}
+  .card li::before{content:"";flex:0 0 auto;width:20px;height:20px;margin-top:2px;border-radius:6px;background:currentColor;opacity:.14}
+  .card.problem li{color:#9a3b3b}.card.solution li{color:#2c6b47}
+
+  /* PERSONAS */
+  .persona-nav{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:56px}
+  .pchip{display:inline-flex;align-items:center;gap:9px;padding:11px 20px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:700;font-size:14.5px;color:var(--ink-2);box-shadow:var(--shadow-sm)}
+  .pchip .dot{width:10px;height:10px;border-radius:50%}
+  .persona{padding:70px 0;border-top:1px solid var(--line)}
+  .persona .head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;font-weight:700;font-size:13px;color:#fff}
+  .persona h2{margin:6px 0 14px}
+  .feat{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px;max-width:560px}
+  @media(max-width:520px){.feat{grid-template-columns:1fr}}
+  .feat div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow-sm)}
+  .feat h4{font-size:15px;margin-bottom:4px}
+  .feat p{font-size:13.5px;color:var(--muted)}
+  .persona-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  @media(max-width:900px){.persona-grid{grid-template-columns:1fr}}
+  .gallery{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+  /* strip of shots */
+  .shots{display:flex;gap:18px;overflow-x:auto;padding:10px 4px 22px;scroll-snap-type:x mandatory}
+  .shots .phone{scroll-snap-align:center;cursor:zoom-in}
+  .shots::-webkit-scrollbar{height:8px}
+  .shots::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+  .cap{text-align:center;font-size:12.5px;color:var(--muted);margin-top:9px;font-weight:600}
+
+  /* FEATURES GRID */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media(max-width:860px){.grid3{grid-template-columns:1fr}}
+  .fcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-sm);transition:transform .18s ease,box-shadow .18s ease}
+  .fcard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .ficon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:14px}
+  .fcard h3{font-size:17px;margin-bottom:7px}
+  .fcard p{font-size:14.5px;color:var(--muted)}
+
+  /* VIDEOS */
+  .videos{background:linear-gradient(180deg,#0e1330,#141a3d);color:#fff;border-radius:36px;padding:64px 34px}
+  .videos .eyebrow{color:#b9b4ff}
+  .videos h2{color:#fff}
+  .videos .lead{color:#c7cce0}
+  .vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:44px}
+  @media(max-width:860px){.vgrid{grid-template-columns:1fr}}
+  .vitem{display:flex;flex-direction:column;align-items:center}
+  .vitem .phone{width:220px}
+  .vitem p{margin-top:14px;font-weight:600;font-size:14.5px;color:#e7e9f5;text-align:center}
+  .vitem small{color:#9aa0c0;font-size:12.5px}
+
+  /* STACK */
+  .stack{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+  .tag{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;color:var(--ink-2);box-shadow:var(--shadow-sm)}
+  .tag b{color:var(--purple)}
+
+  /* FOOTER */
+  footer{background:#0B1020;color:#c7cce0;padding:70px 0 46px;margin-top:0}
+  footer .wrap{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;align-items:start}
+  @media(max-width:760px){footer .wrap{grid-template-columns:1fr}}
+  footer h3{color:#fff;font-size:22px;margin-bottom:10px}
+  footer p{max-width:420px;font-size:15px}
+  footer .who{font-size:14px;line-height:1.9}
+  footer .who b{color:#fff}
+  .fnote{margin-top:40px;padding-top:22px;border-top:1px solid #23283b;font-size:12.5px;color:#7d84a6;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.visible{opacity:1;transform:none}
+
+  /* lightbox */
+  .lb{position:fixed;inset:0;background:rgba(6,9,20,.9);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out;backdrop-filter:blur(4px)}
+  .lb.open{display:flex}
+  .lb img{max-width:min(420px,92vw);max-height:92vh;border-radius:28px;box-shadow:0 30px 80px -20px rgba(0,0,0,.7);border:8px solid #0B1020}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="logo">✚</span> HomeCare</div>
+    <div class="navlinks">
+      <a href="#solucao">Solução</a>
+      <a href="#admin">Gestão</a>
+      <a href="#enfermeiro">Enfermeiro</a>
+      <a href="#familia">Família</a>
+      <a href="#demos">Demos</a>
+      <a href="#stack">Tecnologia</a>
+    </div>
+    <a class="btn btn-primary" href="#demos" style="padding:10px 18px;font-size:14px">Ver demonstração</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Plataforma de cuidado domiciliar</span>
+      <h1>Todo o cuidado em casa, <span class="grad">sob controle.</span></h1>
+      <p class="sub">HomeCare conecta a empresa de cuidados, os enfermeiros em campo e as famílias dos pacientes num só aplicativo. Registros em tempo real, escalas, sinais vitais e total transparência.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#demos">▶ Assistir demonstração</a>
+        <a class="btn btn-ghost" href="#solucao">Como funciona</a>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><b>3</b><span>perfis dedicados</span></div>
+        <div class="kpi"><b>Funciona offline</b><span>registros sem sinal</span></div>
+        <div class="kpi"><b>Tempo real</b><span>sinais vitais &amp; timeline</span></div>
+      </div>
+    </div>
+    <div class="hero-stage">
+      <div class="phone back sm"><img src="media/img/Enfermeiro_dashboard.webp" alt="App do enfermeiro" loading="eager"></div>
+      <div class="phone front"><img src="media/img/Admin_dashboard.webp" alt="Dashboard de gestão" loading="eager"></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROBLEM / SOLUTION -->
+<section id="solucao">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:720px;margin:0 auto 52px">
+      <span class="eyebrow">O problema</span>
+      <h2>Cuidado domiciliar ainda vive no papel e no WhatsApp</h2>
+      <p class="lead" style="margin:0 auto">Empresas de home care perdem visibilidade da operação, famílias ficam ansiosas sem informação, e enfermeiros dependem de anotações soltas. O HomeCare organiza tudo isso.</p>
+    </div>
+    <div class="split">
+      <div class="card problem reveal">
+        <h3>Sem o HomeCare</h3>
+        <ul>
+          <li>Registros em cadernos e mensagens que se perdem</li>
+          <li>Família sem saber como o parente passou o dia</li>
+          <li>Gestor sem visão de plantões, intercorrências e equipe</li>
+          <li>Escalas confusas e financeiro no improviso</li>
+        </ul>
+      </div>
+      <div class="card solution reveal">
+        <h3>Com o HomeCare</h3>
+        <ul>
+          <li>Cada cuidado registrado e sincronizado, mesmo offline</li>
+          <li>Família acompanha timeline e sinais vitais em tempo real</li>
+          <li>Painel de gestão com plantões, alertas e financeiro</li>
+          <li>Escala define quem cuida de quem, e quando</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONA NAV -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="persona-nav reveal">
+      <a class="pchip" href="#admin"><span class="dot" style="background:var(--admin)"></span> Empresa / Gestão</a>
+      <a class="pchip" href="#enfermeiro"><span class="dot" style="background:var(--purple)"></span> Enfermeiro</a>
+      <a class="pchip" href="#familia"><span class="dot" style="background:var(--family)"></span> Família</a>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<div id="admin" class="persona">
+  <div class="wrap">
+    <div class="persona-grid">
+      <div class="reveal">
+        <span class="badge" style="background:var(--admin)">● Empresa / Gestão</span>
+        <h2>Controle total da operação</h2>
+        <p class="lead">O gestor vê a operação inteira num piscar de olhos: pacientes ativos, equipe, plantões em andamento, registros do dia e intercorrências que exigem atenção.</p>
+        <div class="feat">
+          <div><h4>Dashboard vivo</h4><p>Plantões, registros e alertas do dia em tempo real.</p></div>
+          <div><h4>Equipe</h4><p>Convide e gerencie enfermeiros; controle de acesso por perfil.</p></div>
+          <div><h4>Escalas</h4><p>Defina qual enfermeiro cuida de cada paciente e em quais dias.</p></div>
+          <div><h4>Financeiro</h4><p>Receitas, despesas, saldo do mês e exportação em PDF.</p></div>
+        </div>
+      </div>
+      <div class="gallery reveal">
+        <div class="phone"><img src="media/img/Admin_dashboard.webp" alt="Dashboard do gestor"></div>
+      </div>
+    </div>
+    <div class="shots reveal" style="margin-top:40px">
+      <figure><div class="phone sm"><img src="media/img/Admin_pacientes.webp" alt="Pacientes"></div><figcaption class="cap">Pacientes</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Admin_dashboardEquipe.webp" alt="Equipe"></div><figcaption class="cap">Equipe</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Admin_escala.webp" alt="Escala"></div><figcaption class="cap">Escalas</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Admin_financeiroDashboard.webp" alt="Financeiro"></div><figcaption class="cap">Financeiro</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Admin_modalRegistroPaciente.webp" alt="Novo paciente"></div><figcaption class="cap">Cadastro de paciente</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Admin_modalConvidarFamilia.webp" alt="Convidar família"></div><figcaption class="cap">Convite de família</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Admin_enfermeiroDetalhes.webp" alt="Detalhe do enfermeiro"></div><figcaption class="cap">Detalhe do enfermeiro</figcaption></figure>
+    </div>
+  </div>
+</div>
+
+<!-- ENFERMEIRO -->
+<div id="enfermeiro" class="persona">
+  <div class="wrap">
+    <div class="persona-grid">
+      <div class="gallery reveal" style="order:2">
+        <div class="phone"><img src="media/img/Enfermeiro_dashboard.webp" alt="App do enfermeiro"></div>
+      </div>
+      <div class="reveal" style="order:1">
+        <span class="badge" style="background:var(--purple)">● Enfermeiro em campo</span>
+        <h2>Registrar cuidado ficou simples</h2>
+        <p class="lead">O enfermeiro vê seus pacientes e a escala do dia, inicia o plantão e registra tudo (sinais vitais, alimentação, medicamentos e intercorrências) direto do celular, mesmo sem internet.</p>
+        <div class="feat">
+          <div><h4>Início de plantão</h4><p>Só inicia com o paciente agendado para hoje.</p></div>
+          <div><h4>Registros rápidos</h4><p>Sinais vitais, medicação, alimentação e atividades.</p></div>
+          <div><h4>Funciona offline</h4><p>Sem sinal? Fica na fila e sincroniza depois.</p></div>
+          <div><h4>Fotos no registro</h4><p>Anexe evidências direto do atendimento.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="shots reveal" style="margin-top:40px">
+      <figure><div class="phone sm"><img src="media/img/Enfermeiro_detalhePaciente.webp" alt="Detalhe do paciente"></div><figcaption class="cap">Detalhe do paciente</figcaption></figure>
+      <figure><div class="phone sm"><video src="media/video/Enfermeiro_meuPlantao.mp4" poster="media/video/Enfermeiro_meuPlantao.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Meu plantão</figcaption></figure>
+      <figure><div class="phone sm"><video src="media/video/Enfermeiro_novoRegistro.mp4" poster="media/video/Enfermeiro_novoRegistro.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Novo registro</figcaption></figure>
+      <figure><div class="phone sm"><video src="media/video/Enfermeiro_plantao.mp4" poster="media/video/Enfermeiro_plantao.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Fluxo do plantão</figcaption></figure>
+    </div>
+  </div>
+</div>
+
+<!-- FAMILIA -->
+<div id="familia" class="persona">
+  <div class="wrap">
+    <div class="persona-grid">
+      <div class="reveal">
+        <span class="badge" style="background:var(--family)">● Família</span>
+        <h2>Tranquilidade para quem ama</h2>
+        <p class="lead">A família cadastra o paciente num passo a passo simples e passa a acompanhar tudo: dados clínicos, timeline de cuidados, histórico e o gráfico de sinais vitais atualizado a cada registro.</p>
+        <div class="feat">
+          <div><h4>Onboarding guiado</h4><p>Wizard em etapas para cadastrar o paciente.</p></div>
+          <div><h4>Timeline de cuidados</h4><p>Veja cada atendimento conforme acontece.</p></div>
+          <div><h4>Sinais vitais</h4><p>Gráfico real com faixas de alerta.</p></div>
+          <div><h4>Histórico completo</h4><p>Tudo o que já foi registrado, sempre à mão.</p></div>
+        </div>
+      </div>
+      <div class="gallery reveal">
+        <div class="phone"><img src="media/img/Familiar_pacienteScreen.webp" alt="Tela do paciente"></div>
+      </div>
+    </div>
+    <div class="shots reveal" style="margin-top:40px">
+      <figure><div class="phone sm"><video src="media/video/Familiar_sinaisVitais.mp4" poster="media/video/Familiar_sinaisVitais.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Gráfico de sinais vitais</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Familiar_passo1WizardPaciente.webp" alt="Wizard passo 1"></div><figcaption class="cap">Cadastro · passo 1</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Familiar_passo3WizardPaciente.webp" alt="Wizard passo 3"></div><figcaption class="cap">Cadastro · passo 3</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Familiar_passo5WizardPaciente.webp" alt="Wizard passo 5"></div><figcaption class="cap">Cadastro · passo 5</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Familiar_historicoVazio.webp" alt="Histórico"></div><figcaption class="cap">Histórico</figcaption></figure>
+      <figure><div class="phone sm"><img src="media/img/Familiar_senhaDefinitiva.webp" alt="Definição de senha"></div><figcaption class="cap">Acesso seguro</figcaption></figure>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES GRID -->
+<section>
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:720px;margin:0 auto 52px">
+      <span class="eyebrow">Recursos que fazem diferença</span>
+      <h2>Feito para a rotina real do cuidado</h2>
+    </div>
+    <div class="grid3">
+      <div class="fcard reveal"><div class="ficon" style="background:rgba(108,99,255,.12);color:var(--purple)">📶</div><h3>Funciona offline</h3><p>Registros feitos sem internet entram numa fila e sincronizam sozinhos assim que o sinal volta.</p></div>
+      <div class="fcard reveal"><div class="ficon" style="background:rgba(0,188,212,.14);color:var(--family)">📈</div><h3>Sinais vitais em tempo real</h3><p>Gráfico com faixas de alerta por paciente. A família e a equipe veem tendências, não só números.</p></div>
+      <div class="fcard reveal"><div class="ficon" style="background:rgba(255,107,53,.14);color:var(--admin)">🗓️</div><h3>Escalas integradas</h3><p>A escala definida pela gestão libera o plantão do enfermeiro só no paciente e dia certos.</p></div>
+      <div class="fcard reveal"><div class="ficon" style="background:rgba(239,68,68,.12);color:var(--red)">⚠️</div><h3>Intercorrências</h3><p>Eventos críticos ganham destaque no painel do gestor com gravidade e horário.</p></div>
+      <div class="fcard reveal"><div class="ficon" style="background:rgba(22,163,74,.12);color:var(--green)">💰</div><h3>Financeiro</h3><p>Receitas, despesas e saldo por mês, com exportação de relatório em PDF.</p></div>
+      <div class="fcard reveal"><div class="ficon" style="background:rgba(108,99,255,.12);color:var(--purple)">🔐</div><h3>Acesso por perfil</h3><p>Cada perfil vê apenas o que lhe cabe, com isolamento de dados por empresa.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMOS -->
+<section id="demos">
+  <div class="wrap">
+    <div class="videos reveal">
+      <div style="text-align:center;max-width:680px;margin:0 auto">
+        <span class="eyebrow">Demonstrações</span>
+        <h2>Veja o app em ação</h2>
+        <p class="lead" style="margin:0 auto">Gravações reais das principais jornadas do produto.</p>
+      </div>
+      <div class="vgrid">
+        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_detalhePaciente.mp4" poster="media/video/Enfermeiro_detalhePaciente.webp" controls playsinline preload="none"></video></div><p>Detalhe do paciente <br><small>Enfermeiro</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Familiar_sinaisVitais.mp4" poster="media/video/Familiar_sinaisVitais.webp" controls playsinline preload="none"></video></div><p>Sinais vitais em tempo real <br><small>Família</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Admin_videoDescricaoPacienteCard.mp4" poster="media/video/Admin_videoDescricaoPacienteCard.webp" controls playsinline preload="none"></video></div><p>Card do paciente <br><small>Gestão</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_meuPlantao.mp4" poster="media/video/Enfermeiro_meuPlantao.webp" controls playsinline preload="none"></video></div><p>Meu plantão <br><small>Enfermeiro</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_novoRegistro.mp4" poster="media/video/Enfermeiro_novoRegistro.webp" controls playsinline preload="none"></video></div><p>Novo registro <br><small>Enfermeiro</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/root_termosDeUso.mp4" poster="media/video/root_termosDeUso.webp" controls playsinline preload="none"></video></div><p>Termos e privacidade <br><small>Onboarding</small></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack" style="padding-top:20px">
+  <div class="wrap">
+    <div class="reveal" style="max-width:760px">
+      <span class="eyebrow">Sob o capô</span>
+      <h2>Construído com tecnologia moderna</h2>
+      <p class="lead">Aplicativo nativo multiplataforma (iOS e Android) com backend em nuvem, sincronização em tempo real e design seguindo as diretrizes da Apple (HIG).</p>
+      <div class="stack">
+        <span class="tag"><b>React Native</b> · Expo SDK 54</span>
+        <span class="tag"><b>TypeScript</b> strict</span>
+        <span class="tag"><b>Firebase</b> Auth · Firestore · Storage</span>
+        <span class="tag"><b>Zustand</b> state</span>
+        <span class="tag"><b>React Navigation</b> v7</span>
+        <span class="tag">Offline queue &amp; sync</span>
+        <span class="tag">Apple HIG design</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand" style="color:#fff;margin-bottom:14px"><span class="logo">✚</span> HomeCare</div>
+      <h3>Cuidado domiciliar, com transparência.</h3>
+      <p>Uma plataforma que aproxima empresa, equipe e família em torno do que importa: cuidar bem de quem está em casa.</p>
+    </div>
+    <div class="who">
+      <b>Projeto & desenvolvimento</b><br>
+      Iago · Desenvolvedor mobile<br>
+      React Native · Firebase · TypeScript<br>
+      <span style="color:#9aa0c0">Estudo de caso de portfólio</span>
+    </div>
+  </div>
+  <div class="wrap fnote">
+    <span>© 2026 HomeCare. Apresentação de produto.</span>
+    <span>Imagens e vídeos: capturas reais do aplicativo.</span>
+  </div>
+</footer>
+
+<div class="lb" id="lightbox"><img src="" alt=""></div>
+
+<script>
+  // Reveal on scroll
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Lightbox for image screenshots (not videos)
+  const lb=document.getElementById('lightbox'), lbImg=lb.querySelector('img');
+  document.querySelectorAll('.shots .phone img, .gallery .phone img').forEach(img=>{
+    img.style.cursor='zoom-in';
+    img.addEventListener('click',()=>{lbImg.src=img.src;lb.classList.add('open')});
+  });
+  lb.addEventListener('click',()=>lb.classList.remove('open'));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open')});
+
+  // Pause other videos when one plays
+  const vids=document.querySelectorAll('video');
+  vids.forEach(v=>v.addEventListener('play',()=>vids.forEach(o=>{if(o!==v)o.pause()})));
+</script>
+</body>
+</html>
