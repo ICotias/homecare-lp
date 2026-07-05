@@ -21,6 +21,7 @@
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased;
+    overflow-x:clip;
   }
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
@@ -137,6 +138,19 @@
   footer .who{font-size:14px;line-height:1.9}
   footer .who b{color:#fff}
   .fnote{margin-top:40px;padding-top:22px;border-top:1px solid #23283b;font-size:12.5px;color:#7d84a6;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  /* MOBILE */
+  @media(max-width:560px){
+    section{padding:64px 0}
+    .persona{padding:52px 0}
+    .hero{padding:52px 0 28px}
+    .hero-stage{gap:12px}
+    .phone{width:clamp(148px,45vw,236px)}
+    .phone.sm{width:clamp(126px,38vw,206px)}
+    .videos{padding:44px 20px;border-radius:26px}
+    .kpis{gap:20px}
+    .cta .btn{flex:1;justify-content:center}
+  }
 
   /* reveal */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
