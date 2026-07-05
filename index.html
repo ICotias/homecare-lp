@@ -71,6 +71,12 @@
   .phone:has(video){position:relative}
   .phone:has(video)::after{content:"▶";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:52px;height:52px;display:flex;align-items:center;justify-content:center;padding-left:4px;font-size:19px;color:#fff;background:rgba(11,16,32,.55);border-radius:50%;pointer-events:none;transition:opacity .25s ease;backdrop-filter:blur(3px)}
   .phone.playing::after{opacity:0}
+  video:fullscreen{object-fit:contain;background:#000;border-radius:0}
+  video:-webkit-full-screen{object-fit:contain;background:#000;border-radius:0}
+  .vbar{position:absolute;left:14px;right:14px;bottom:12px;height:4px;border-radius:99px;background:rgba(255,255,255,.4);opacity:0;transition:opacity .2s ease;cursor:pointer;z-index:3}
+  .vfill{height:100%;width:0;border-radius:inherit;background:var(--purple)}
+  .vfs{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;border:0;display:flex;align-items:center;justify-content:center;background:rgba(11,16,32,.55);color:#fff;font-size:15px;cursor:pointer;opacity:0;transition:opacity .2s ease;z-index:3;backdrop-filter:blur(3px)}
+  .phone.playing .vbar,.phone.playing .vfs,.phone:hover .vbar,.phone:hover .vfs{opacity:1}
 
   /* PROBLEM/SOLUTION */
   .split{display:grid;grid-template-columns:1fr 1fr;gap:26px}
@@ -438,14 +444,36 @@
   const vids=document.querySelectorAll('video');
   vids.forEach(v=>v.addEventListener('play',()=>vids.forEach(o=>{if(o!==v)o.pause()})));
 
-  // Poster limpo: controles só aparecem depois que o vídeo começa
+  // Player custom: clique alterna play/pause, barra de progresso e tela cheia
   vids.forEach(v=>{
-    const ph=v.closest('.phone');
-    v.addEventListener('click',()=>{
-      if(v.paused){v.controls=true;v.play()}
+    const ph=v.closest('.phone'); if(!ph) return;
+    const bar=document.createElement('div'); bar.className='vbar';
+    const fill=document.createElement('div'); fill.className='vfill'; bar.appendChild(fill);
+    const fs=document.createElement('button'); fs.className='vfs'; fs.type='button';
+    fs.setAttribute('aria-label','Tela cheia'); fs.textContent='⤢';
+    ph.append(bar,fs);
+    v.tabIndex=0;
+
+    const toggle=()=>{ v.paused ? v.play() : v.pause() };
+    v.addEventListener('click',toggle);
+    v.addEventListener('keydown',e=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle()} });
+    v.addEventListener('play',()=>ph.classList.add('playing'));
+    v.addEventListener('pause',()=>ph.classList.remove('playing'));
+    v.addEventListener('ended',()=>{ph.classList.remove('playing');fill.style.width='0';v.load()});
+    v.addEventListener('timeupdate',()=>{ if(v.duration) fill.style.width=(v.currentTime/v.duration*100)+'%' });
+
+    bar.addEventListener('click',e=>{
+      e.stopPropagation();
+      const r=bar.getBoundingClientRect();
+      if(v.duration) v.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*v.duration;
     });
-    v.addEventListener('play',()=>ph&&ph.classList.add('playing'));
-    v.addEventListener('ended',()=>{v.controls=false;v.load();ph&&ph.classList.remove('playing')});
+
+    fs.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!v.requestFullscreen && v.webkitEnterFullscreen){ v.webkitEnterFullscreen() }      // iPhone
+      else if(v.requestFullscreen){ v.requestFullscreen() }
+      else if(v.webkitRequestFullscreen){ v.webkitRequestFullscreen() }
+    });
   });
 </script>
 </body>
