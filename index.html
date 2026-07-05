@@ -67,6 +67,10 @@
   .phone.sm{width:206px;border-radius:34px;padding:8px}
   .phone media,.phone img,.phone video{width:100%;display:block;border-radius:32px;background:#fff}
   .phone.sm img,.phone.sm video{border-radius:27px}
+  .phone video{aspect-ratio:480/1042;object-fit:cover;cursor:pointer}
+  .phone:has(video){position:relative}
+  .phone:has(video)::after{content:"▶";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:52px;height:52px;display:flex;align-items:center;justify-content:center;padding-left:4px;font-size:19px;color:#fff;background:rgba(11,16,32,.55);border-radius:50%;pointer-events:none;transition:opacity .25s ease;backdrop-filter:blur(3px)}
+  .phone.playing::after{opacity:0}
 
   /* PROBLEM/SOLUTION */
   .split{display:grid;grid-template-columns:1fr 1fr;gap:26px}
@@ -297,9 +301,9 @@
     </div>
     <div class="shots reveal" style="margin-top:40px">
       <figure><div class="phone sm"><img src="media/img/Enfermeiro_detalhePaciente.webp" alt="Detalhe do paciente"></div><figcaption class="cap">Detalhe do paciente</figcaption></figure>
-      <figure><div class="phone sm"><video src="media/video/Enfermeiro_meuPlantao.mp4" poster="media/video/Enfermeiro_meuPlantao.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Meu plantão</figcaption></figure>
-      <figure><div class="phone sm"><video src="media/video/Enfermeiro_novoRegistro.mp4" poster="media/video/Enfermeiro_novoRegistro.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Novo registro</figcaption></figure>
-      <figure><div class="phone sm"><video src="media/video/Enfermeiro_plantao.mp4" poster="media/video/Enfermeiro_plantao.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Fluxo do plantão</figcaption></figure>
+      <figure><div class="phone sm"><video src="media/video/Enfermeiro_meuPlantao.mp4" poster="media/video/Enfermeiro_meuPlantao.webp" playsinline preload="none" muted></video></div><figcaption class="cap">▶ Meu plantão</figcaption></figure>
+      <figure><div class="phone sm"><video src="media/video/Enfermeiro_novoRegistro.mp4" poster="media/video/Enfermeiro_novoRegistro.webp" playsinline preload="none" muted></video></div><figcaption class="cap">▶ Novo registro</figcaption></figure>
+      <figure><div class="phone sm"><video src="media/video/Enfermeiro_plantao.mp4" poster="media/video/Enfermeiro_plantao.webp" playsinline preload="none" muted></video></div><figcaption class="cap">▶ Fluxo do plantão</figcaption></figure>
     </div>
   </div>
 </div>
@@ -324,7 +328,7 @@
       </div>
     </div>
     <div class="shots reveal" style="margin-top:40px">
-      <figure><div class="phone sm"><video src="media/video/Familiar_sinaisVitais.mp4" poster="media/video/Familiar_sinaisVitais.webp" controls playsinline preload="none" muted></video></div><figcaption class="cap">▶ Gráfico de sinais vitais</figcaption></figure>
+      <figure><div class="phone sm"><video src="media/video/Familiar_sinaisVitais.mp4" poster="media/video/Familiar_sinaisVitais.webp" playsinline preload="none" muted></video></div><figcaption class="cap">▶ Gráfico de sinais vitais</figcaption></figure>
       <figure><div class="phone sm"><img src="media/img/Familiar_passo1WizardPaciente.webp" alt="Wizard passo 1"></div><figcaption class="cap">Cadastro · passo 1</figcaption></figure>
       <figure><div class="phone sm"><img src="media/img/Familiar_passo3WizardPaciente.webp" alt="Wizard passo 3"></div><figcaption class="cap">Cadastro · passo 3</figcaption></figure>
       <figure><div class="phone sm"><img src="media/img/Familiar_passo5WizardPaciente.webp" alt="Wizard passo 5"></div><figcaption class="cap">Cadastro · passo 5</figcaption></figure>
@@ -362,12 +366,12 @@
         <p class="lead" style="margin:0 auto">Gravações reais das principais jornadas do produto.</p>
       </div>
       <div class="vgrid">
-        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_detalhePaciente.mp4" poster="media/video/Enfermeiro_detalhePaciente.webp" controls playsinline preload="none"></video></div><p>Detalhe do paciente <br><small>Enfermeiro</small></p></div>
-        <div class="vitem"><div class="phone"><video src="media/video/Familiar_sinaisVitais.mp4" poster="media/video/Familiar_sinaisVitais.webp" controls playsinline preload="none"></video></div><p>Sinais vitais em tempo real <br><small>Família</small></p></div>
-        <div class="vitem"><div class="phone"><video src="media/video/Admin_videoDescricaoPacienteCard.mp4" poster="media/video/Admin_videoDescricaoPacienteCard.webp" controls playsinline preload="none"></video></div><p>Card do paciente <br><small>Gestão</small></p></div>
-        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_meuPlantao.mp4" poster="media/video/Enfermeiro_meuPlantao.webp" controls playsinline preload="none"></video></div><p>Meu plantão <br><small>Enfermeiro</small></p></div>
-        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_novoRegistro.mp4" poster="media/video/Enfermeiro_novoRegistro.webp" controls playsinline preload="none"></video></div><p>Novo registro <br><small>Enfermeiro</small></p></div>
-        <div class="vitem"><div class="phone"><video src="media/video/root_termosDeUso.mp4" poster="media/video/root_termosDeUso.webp" controls playsinline preload="none"></video></div><p>Termos e privacidade <br><small>Onboarding</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_detalhePaciente.mp4" poster="media/video/Enfermeiro_detalhePaciente.webp" playsinline preload="none"></video></div><p>Detalhe do paciente <br><small>Enfermeiro</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Familiar_sinaisVitais.mp4" poster="media/video/Familiar_sinaisVitais.webp" playsinline preload="none"></video></div><p>Sinais vitais em tempo real <br><small>Família</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Admin_videoDescricaoPacienteCard.mp4" poster="media/video/Admin_videoDescricaoPacienteCard.webp" playsinline preload="none"></video></div><p>Card do paciente <br><small>Gestão</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_meuPlantao.mp4" poster="media/video/Enfermeiro_meuPlantao.webp" playsinline preload="none"></video></div><p>Meu plantão <br><small>Enfermeiro</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/Enfermeiro_novoRegistro.mp4" poster="media/video/Enfermeiro_novoRegistro.webp" playsinline preload="none"></video></div><p>Novo registro <br><small>Enfermeiro</small></p></div>
+        <div class="vitem"><div class="phone"><video src="media/video/root_termosDeUso.mp4" poster="media/video/root_termosDeUso.webp" playsinline preload="none"></video></div><p>Termos e privacidade <br><small>Onboarding</small></p></div>
       </div>
     </div>
   </div>
@@ -433,6 +437,16 @@
   // Pause other videos when one plays
   const vids=document.querySelectorAll('video');
   vids.forEach(v=>v.addEventListener('play',()=>vids.forEach(o=>{if(o!==v)o.pause()})));
+
+  // Poster limpo: controles só aparecem depois que o vídeo começa
+  vids.forEach(v=>{
+    const ph=v.closest('.phone');
+    v.addEventListener('click',()=>{
+      if(v.paused){v.controls=true;v.play()}
+    });
+    v.addEventListener('play',()=>ph&&ph.classList.add('playing'));
+    v.addEventListener('ended',()=>{v.controls=false;v.load();ph&&ph.classList.remove('playing')});
+  });
 </script>
 </body>
 </html>
